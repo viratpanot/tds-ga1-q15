@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-BASE = os.environ["LEDGER_BASE"]          # URL up to ...&questionId=q-ledger-agent-server
+BASE = re.sub(r"&(?:path|page)=[^&]*", "", os.environ["LEDGER_BASE"].strip().strip("'\""))          # URL up to ...&questionId=q-ledger-agent-server
 IST = timezone(timedelta(hours=5, minutes=30))
 DATE_FIELD = "created_at"                 # timestamp that defines the business date
 CENT = Decimal("0.01")
