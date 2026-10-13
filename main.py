@@ -18,13 +18,19 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 
 # ---------- data loading ----------
+
 def fetch(path, raw=False, **params):
     u = f"{BASE}&path={urllib.parse.quote(path, safe='')}"
     if params:
         u += "&" + urllib.parse.urlencode(params)
-    with urllib.request.urlopen(u, timeout=12) as r:
+    req = urllib.request.Request(u, headers={
+        "User-Agent": "Mozilla/5.0 (compatible; ledger-agent/1.0)",
+        "Accept": "application/json",
+    })
+    with urllib.request.urlopen(req, timeout=12) as r:
         body = r.read().decode()
     return body if raw else json.loads(body)
+
 
 def ts(s):
     return datetime.fromisoformat(s.replace("Z", "+00:00"))
